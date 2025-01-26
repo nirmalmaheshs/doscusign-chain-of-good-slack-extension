@@ -52,7 +52,7 @@ const validateAuth = (req, res, next) => {
 
 // Transform DocuSign request to Slack format
 const transformRequest = (docusignRequest) => {
-  if (!docusignRequest.channelId || !docusignRequest.message) {
+  if (!docusignRequest.message) {
     throw new Error("Missing required fields");
   }
 
@@ -72,7 +72,7 @@ const transformRequest = (docusignRequest) => {
   };
 };
 
-// GET /api/types/names endpoint
+// GetTypeNames
 app.post("/api/types/names", async (req, res) => {
   try {
     const typeNames = [
@@ -94,7 +94,7 @@ app.post("/api/types/names", async (req, res) => {
   }
 });
 
-// POST /api/types/definitions endpoint
+// GetTypeDefinitions
 app.post("/api/types/definitions", async (req, res) => {
   const { typeNames } = req.body;
 
@@ -184,12 +184,25 @@ app.post("/api/slack/channels", validateAuth, async (req, res) => {
   }
 });
 
+// Add this function to check and join channel
+async function ensureBotInChannel(client, channelId) {
+  try {
+    // First try to join the channel directly
+    // await client.conversations.join({ channel: channelId });
+  } catch (error) {
+    console.log("Error joining channel:", error.message);
+    // If joining fails, the channel might be private, and we can't handle that automatically
+    throw new Error(
+      "Unable to join channel. For private channels, please add the bot manually."
+    );
+  }
+}
+
 // POST /api/slack/message endpoint
 app.post("/api/slack/message", validateAuth, async (req, res) => {
   const {
     body: { data, typeName, idempotencyKey },
   } = req;
-  console.log(req.body);
   try {
     if (!data || !typeName) {
       return res
@@ -204,9 +217,43 @@ app.post("/api/slack/message", validateAuth, async (req, res) => {
     }
 
     const slack = new WebClient(req.slackToken);
-    const slackRequest = transformRequest(data);
-    const result = await slack.chat.postMessage(slackRequest);
 
+    // Try to find the docusign-notifications channel
+    let channelId;
+    try {
+      const channelList = await slack.conversations.list({
+        types: "public_channel,private_channel",
+      });
+      const channel = channelList.channels.find(
+        (ch) => ch.name === "docusign-notifications"
+      );
+
+      if (channel) {
+        channelId = channel.id;
+      } else {
+        // Create the channel if it doesn't exist
+        const newChannel = await slack.conversations.create({
+          name: "docusign-notifications",
+          is_private: false,
+        });
+        channelId = newChannel.channel.id;
+        console.log("Created new channel:", newChannel);
+      }
+    } catch (error) {
+      console.log("Error finding/creating channel:", error);
+      throw error;
+    }
+
+    const slackRequest = {
+      ...transformRequest(data),
+      channel: channelId,
+      app_hidden: false,
+    };
+    console.log(channelId);
+    // Add this before sending the message
+    await ensureBotInChannel(slack, channelId);
+
+    const result = await slack.chat.postMessage(slackRequest);
     return res.json({
       recordId: result.ts,
     });
