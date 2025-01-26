@@ -130,6 +130,10 @@ app.post("/api/types/definitions", async (req, res) => {
   }
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Post /api/slack/channels endpoint
 app.post("/api/slack/channels", validateAuth, async (req, res) => {
   const {
