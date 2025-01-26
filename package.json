@@ -1,0 +1,28 @@
+{
+  "name": "slack-extension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nirmalmaheshs@github.com/nirmalmaheshs/doscusign-chain-of-good-slack-extension.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nirmalmaheshs/doscusign-chain-of-good-slack-extension/issues"
+  },
+  "homepage": "https://github.com/nirmalmaheshs/doscusign-chain-of-good-slack-extension#readme",
+  "description": "",
+  "dependencies": {
+    "@accordproject/concerto-core": "^3.20.4",
+    "@slack/web-api": "^7.8.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "winston": "^3.17.0"
+  }
+}

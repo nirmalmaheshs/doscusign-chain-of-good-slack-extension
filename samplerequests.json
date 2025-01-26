@@ -1,0 +1,8 @@
+{
+  "typeName": "Message",
+  "idempotencyKey": "12345-abcde-67890",
+  "data": {
+    "channelId": "C08A9Q9SWRH",
+    "message": "Hello from the API!"
+  }
+}

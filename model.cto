@@ -1,0 +1,29 @@
+namespace org.slack@1.0.0
+
+@Term("Channel")
+@Crud("Readable")
+concept Channel identified by id {
+  @Term("Channel ID")
+  @Crud("Readable")
+  o String id
+
+  @Term("Channel Name")
+  @Crud("Readable")
+  o String name
+
+  @Term("Is Private")
+  @Crud("Readable")
+  o Boolean isPrivate
+}
+
+@Term("Message")
+@Crud("Createable,Readable,Updateable")
+concept Message {
+  @Term("Channel ID")
+  @Crud("Createable,Readable,Updateable")
+  o String channelId
+
+  @Term("Message Text")
+  @Crud("Createable,Readable,Updateable")
+  o String message
+}
