@@ -21,7 +21,7 @@ concept Channel identified by id {
 concept Message {
   @Term("Channel ID")
   @Crud("Createable,Readable,Updateable")
-  o String channelId
+  o String[] channelId optional
 
   @Term("Message Text")
   @Crud("Createable,Readable,Updateable")
