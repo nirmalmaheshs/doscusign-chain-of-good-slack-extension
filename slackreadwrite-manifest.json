@@ -1,0 +1,127 @@
+{
+  "id": "3dfbcccb-91b4-404b-9d7c-0b45f2b49782",
+  "name": "Slack",
+  "description": {
+    "short": "Send DocuSign agreement notifications to Slack channels.",
+    "long": "Automatically sends donation notifications to your Slack workspace when donors complete their agreements in DocuSign. The extension allows you to choose which Slack channel receives these notifications and sends a message with basic donation details whenever an agreement is completed. A simple way to keep your team informed about new donations without checking DocuSign."
+  },
+  "termsOfServiceUrl": "https://www.samplecompany.com/tos",
+  "privacyUrl": "https://www.samplecompany.com/privacy-security",
+  "supportUrl": "https://www.samplecompany.com/support",
+  "publisher": {
+    "name": "Stalwarts",
+    "email": "nirmalmaheshs@outlook.com"
+  },
+  "connections": [
+    {
+      "id": "b534b7a1-3f80-42c4-ba18-25f037dd562b",
+      "name": "slack_notifications",
+      "description": "Secure OAuth2 connection to Slack for sending notifications and accessing channels",
+      "type": "oauth2",
+      "params": {
+        "provider": "CUSTOM",
+        "clientId": "8362611787217.8349911194274",
+        "clientSecret": "[omitted]",
+        "scopes": [
+          "incoming-webhook",
+          "channels:manage",
+          "groups:read",
+          "groups:write",
+          "chat:write",
+          "chat:write.customize",
+          "channels:read",
+          "im:write"
+        ],
+        "customConfig": {
+          "authorizationMethod": "header",
+          "authorizationParams": {
+            "prompt": "consent",
+            "access_type": "offline"
+          },
+          "authorizationUrl": "https://slack.com/oauth/v2/authorize",
+          "requiredScopes": [],
+          "scopeSeparator": " ",
+          "tokenUrl": "https://slack.com/api/oauth.v2.access",
+          "refreshScopes": []
+        }
+      }
+    }
+  ],
+  "icon": {
+    "data": "[omitted]",
+    "mediaType": "image/png",
+    "id": "09b83ccd-5dbb-4abc-877e-36326535cdaa"
+  },
+  "screenshots": [
+    {
+      "data": "[omitted]",
+      "mediaType": "image/png",
+      "id": "c9676cc9-09e6-4e70-96bb-d2a9b970a9f1"
+    }
+  ],
+  "extensions": [
+    {
+      "name": "Slack Notifications Integration",
+      "description": "Send DocuSign agreement notifications to Slack channels and retrieve channel information for configuration.",
+      "template": "DataIO.Version6.DataInputOutput",
+      "actionReferences": [
+        "Slack PatchRecord Action",
+        "Slack GetTypeDefinitions Action",
+        "Slack GetTypeNames Action",
+        "Slack CreateRecord Action",
+        "List Slack Channels"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "name": "Slack PatchRecord Action",
+      "description": "Updates existing Slack messages (if supported by channel type)",
+      "template": "DataIO.Version6.PatchRecord",
+      "connectionsReference": "slack_notifications",
+      "params": {
+        "uri": "https://extension.chainofgood.help/api/slack/message/update"
+      }
+    },
+    {
+      "name": "Slack GetTypeDefinitions Action",
+      "description": "Retrieves Concerto definitions for Slack channel and message types",
+      "template": "DataIO.Version6.GetTypeDefinitions",
+      "connectionsReference": "slack_notifications",
+      "params": {
+        "uri": "https://extension.chainofgood.help/api/types/definitions"
+      }
+    },
+    {
+      "name": "Slack GetTypeNames Action",
+      "description": "Retrieves available Slack data types (Channel and Message)",
+      "template": "DataIO.Version6.GetTypeNames",
+      "connectionsReference": "slack_notifications",
+      "params": {
+        "uri": "https://extension.chainofgood.help/api/types/names"
+      }
+    },
+    {
+      "name": "Slack CreateRecord Action",
+      "description": "Sends new messages to Slack channels",
+      "template": "DataIO.Version6.CreateRecord",
+      "connectionsReference": "slack_notifications",
+      "params": {
+        "uri": "https://extension.chainofgood.help/api/slack/message"
+      }
+    },
+    {
+      "name": "List Slack Channels",
+      "description": "Get available Slack channels",
+      "template": "DataIO.Version6.SearchRecords",
+      "connectionsReference": "slack_notifications",
+      "params": {
+        "uri": "https://extension.chainofgood.help/api/slack/channels"
+      }
+    }
+  ],
+  "signupUrl": "https://www.samplecompany.com/signup",
+  "changelog": "",
+  "publicationRegions": ["US"],
+  "distribution": "PRIVATE"
+}
