@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the port specified in the .env file
-EXPOSE 8081
+EXPOSE 3000
 
 # Set environment variables (optional: .env file should be mounted during runtime)
 ENV NODE_ENV=production
